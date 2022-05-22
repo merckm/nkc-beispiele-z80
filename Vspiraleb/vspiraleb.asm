@@ -1,6 +1,6 @@
 
 ;
-; Beispiel Program aus "Rechner Modular" Seite 285
+; Beispiel Program aus "Rechner Modular" Seite 288
 ; Author Rolf-Dieter Klein
 ; VASM Assembler code von Dr. Martin Merck
 ;
