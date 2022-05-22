@@ -17,7 +17,7 @@ KREISE:
             ld hl,1
             call DREHE
         call ENDSCHLEIFE
-        ld hl,"="
+        ld hl,20
         call SCHREITE
         ld hl,10
         call DREHE
