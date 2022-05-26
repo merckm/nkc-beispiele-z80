@@ -16,7 +16,7 @@ VIERTELKREIS:
     call SCHLEIFE
         ld hl,1
 		call SCHREITE
-		ld hl,90
+		ld hl,1
 		call DREHE
   	call ENDSCHLEIFE
     ret
@@ -52,7 +52,7 @@ BLUME:
 	ld hl,90
 	call DREHE
 	ld hl,-40
-	call DREHE
+	call SCHREITE
 	ret
 
 	end

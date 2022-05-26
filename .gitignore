@@ -4,4 +4,4 @@
 # VASM output files
 *.bin
 *.lst
-
+*.cas

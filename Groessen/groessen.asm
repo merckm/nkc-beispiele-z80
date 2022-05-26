@@ -1,4 +1,3 @@
-
 ;
 ; Beispiel Program aus "Rechner Modular" Seite 287
 ; Author Rolf-Dieter Klein
@@ -6,6 +5,9 @@
 ;
     .include ../Include/z80grund.asm
     .org $8800
+
+START:
+    jp GROESSEN
 
 SECHSECK:
     ; kleines Beispiel
