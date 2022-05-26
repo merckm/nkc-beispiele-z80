@@ -1,4 +1,3 @@
-
 ;
 ; Beispiel Program aus "Rechner Modular" Seite 140
 ; Author Rolf-Dieter Klein
@@ -7,7 +6,7 @@
     .include ../Include/z80grund.asm
     .org $8800
 
-EINS:
+STRASSE:
     ld hl,90
     call DREHE
     ld hl,20
