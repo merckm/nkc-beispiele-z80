@@ -8,10 +8,8 @@
 ;* Dieses Programm auf Adr 8800   *
 ;* gelegt.                        *
 ;**********************************
-    aseg
 
-    ioe equ 30h     ; IO-Karte Basis
-    test equ 0      ; BASIS des Grundprogramms
+IOE = $30     ; IO-Karte Basis
 
     .include ../Include/z80grund.asm
 
@@ -24,10 +22,10 @@ bcd2:       ds 2
 buffer:     ds 80
 data:       ds 256+256  ; Datenspeicher fuer Kanaele
 
-stack:      equ 87FFh
+stack = $87FF
 
-    PAGE equ 60h
-    GDP  equ 70h
+PAGE = $60
+GDP  = $70
 
     org 8800h       ; RAM Speicher vpn 8400 bis 87FF
     jp start
@@ -79,7 +77,7 @@ sync:               ; warten auf vb
     ret
 sync1:
     xor a
-    ls (synstate),a
+    ld (synstate),a
     scf
     ret
 
@@ -87,9 +85,9 @@ gitter:             ; Seite = 3 Gitteraufbau
                     ; 256 = 5V
                     ; 10 Teile
     call setpen
-    ls a,11111000b  ; screin,lese = 3
+    ld a,11111000b  ; screin,lese = 3
     call setpage    ; wait incl.
-    ls a,00000001b  ; dotted line
+    ld a,00000001b  ; dotted line
     out (GDP+2),a
     ld de,0         ; Start
     ld hl,11        ; 11 Linien (10 Unterteilungen)
@@ -130,7 +128,7 @@ gitter:             ; Seite = 3 Gitteraufbau
                     ;
     call wait
     ld a,0
-    out (GDP+2),0   ; reset linestype
+    out (GDP+2),a   ; reset linestype
 
     ; Mittel-Linien
     ld hl,0
@@ -151,17 +149,17 @@ getframe:           ; einen Datenblock laden
                     ; Bit 0 = Messport A + Trigger
                     ; Bit 1 = Messport B
 get1:
-    in a,(ioe)      ; einlesen für trigger
+    in a,(IOE)      ; einlesen für trigger
     rrca
     jr c,get1
 get2:
-    in a,(ioe)
+    in a,(IOE)
     rrca            ; 4 T-states
     jr nc,get2      ;   -----_____-----_____-----Trigger start
                     ; 7 T-states condition not met
     ld hl,data      ; 10 T-States
     ld b,0          ; 7 T-States
-    ld c, ioe       ; 7 T-States
+    ld c, IOE       ; 7 T-States
     inir            ; lade 2*256 Bytes von IOE in HL
     inir            ; 21T-Zyklen=5.25us pro Abtastpunkt bei 4MHz
     ret
@@ -175,8 +173,9 @@ abgleich2:
 help:
     ret
 
+drawto:
+moveto:
 clearall:
-setpage:
 textaus:
 menuein:
     ret
@@ -198,25 +197,25 @@ start:
     ld hl,meld4
     call textaus
 
-    call menueein
+    call menuein
 
     cp '1'          ; if a='1'
-    jp ne, .menu2
+    jp nz,menu2
     call abgleich1
     jp start
 menu2:
     cp '2'          ; if a='2'
-    jp ne, .menu3
+    jp nz,menu3
     call abgleich2
     jp start
-.menu3:
+menu3:
     cp '3'          ; if a='3'
-    jp ne, .menu4
+    jp nz,menu4
     call help
     jp start
-.menu4:
+menu4:
     cp '4'          ; if a='4'
-    jp ne, start
+    jp nz,start
                     ; fuer Erweiterungen
     jp start
 

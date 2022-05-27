@@ -27,7 +27,7 @@ VIELQUADRAT:
     ld hl,36   
     call SCHLEIFE
         call QUADRAT
-        ld hl,!0
+        ld hl,10
         call DREHE
     call ENDSCHLEIFE
     ret

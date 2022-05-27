@@ -23,7 +23,8 @@ TEXT1:
     .byte "HALLO"
     .byte 0
 
-HALLOTXT:
+START:
+HALLOTEXT:
     ld hl,TEXT1
     call WRITE
     ld hl,60
