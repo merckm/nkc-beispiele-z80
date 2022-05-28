@@ -1,0 +1,16 @@
+lerne vspirale :leange :winkel
+vw :laenge re :winkel
+vspirale (:laenge+3) :winkel
+ende
+
+lerne demo
+vspirale 4 144
+lb
+vspirale 5 91
+lb
+vspirale 4 181
+lb
+vspirale 5 121
+lb
+vspirale 5 120
+ende

@@ -1,0 +1,14 @@
+lerne rarc
+rarc :n
+wh 90[schr16tel :n li 1]
+ende
+
+lerne spiro :n
+rarc :n
+wenn :n>100 [rueckkehr]
+spiro :n+1
+ende
+
+lerne demo
+spiro 1
+ende

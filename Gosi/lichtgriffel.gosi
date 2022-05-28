@@ -1,0 +1,27 @@
+lerne lichtgriffelxy
+solange (:port 240)&1<>0 [seite 0 0]
+port 112 8
+solange (:port 112)$1=0 [seite 0 0]
+setze "x (:port 124)#2 setze #y (:port 125)#2
+ende
+
+lerne testgriffel
+lichtgriffelxy
+dr :x dr [ ] dz :y
+testgriffel
+ende
+
+lerne zeichne
+lichtgriffelxy
+stifthoch aufxy :x :y stiftab
+wh 6[vw 4 re 60]
+zeichne
+ende
+
+lerne menue
+bild blinker 0 0 dz[Quadrat :0] blinker 0 4 dz[Kreis   :0]
+lichtgriffelxy wenn :y<60 [kreis]
+wenn :y>60 [quadrat]
+solange (:port 240)&1=0 [seite 0 0]
+menue
+ende

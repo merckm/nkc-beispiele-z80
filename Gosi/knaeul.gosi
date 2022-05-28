@@ -1,0 +1,12 @@
+lerne vschritt :seite :winkel
+vw :seite re :winkel
+ende
+
+lerne knaeul :seite :winkel
+vschritt :seite :winkel
+knaeul :seite (:winkel+10)
+ende
+
+lerne demo
+knaeul 30 1
+ende

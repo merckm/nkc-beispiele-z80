@@ -1,0 +1,8 @@
+lerne vspirale :seite :winkel :zuwachs
+cw :seite re :winkel
+vspirale (:seite+:zuwachs) :winkel :zuwachs
+ende
+
+lerne demo
+vspirale 1 45 1
+ende

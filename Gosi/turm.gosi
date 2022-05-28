@@ -1,0 +1,10 @@
+lerne turm :seite
+
+wh 4[vw :seite re 90]
+vprwärts :seite
+turm :seite*6/10
+ende
+
+lerne demo
+turm 50
+ende

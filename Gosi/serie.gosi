@@ -1,0 +1,35 @@
+lerne quadrat :p :q
+setze "oben 5*:i/200
+setze "unten -:oben
+setze "p1 :p+5+:unten+:zz :oben-:unten
+setze "q1 :q+5+:unten+:zz :oben-:unten
+setze "wmax 45+45*:i/200
+setze "wmin 45-45*:i/200
+setze "winkel :wmin+:zz :wmax-:wmin
+setze "k 7
+sh position sa
+wh 4[setze "winkel :winkel+90 position]
+setze "i :i+1
+ende
+
+lerne position
+aufxy (:p1+:r*(:cos :winkel)/256) (:q1+:r*(:sin :winkel)/256)
+ende
+
+lerne rest
+setze "xkor :xkor+:quer
+setze "ykor :yanf
+ende
+
+lerne serie :quer :hoch :xmal :ymal
+setze "i 0
+setze "r 20
+setze "xkor 20
+setze "ykor 180
+setze "yanf :ykor
+wh :xmal[wh :ymal[quadrat :xkor ;ykor setze "ykor :ykor+:hoch] rest]
+ende
+
+lerne demo
+serie 30 30 15 10
+ende

@@ -1,0 +1,8 @@
+lerne quadrat :laenge
+ wh 4 [ vw :laenge re 90 ]
+ende
+
+lerne quadrate
+ setze "i 0 wh 50 [quadrat :i setze *i :i+1]
+ setze "i 50 wh 50 [ quadrat :i setze *i :i+4]
+ende
