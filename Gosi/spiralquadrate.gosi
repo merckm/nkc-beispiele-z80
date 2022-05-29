@@ -1,14 +1,14 @@
 lerne rquadrat :seite
-wh 4[cw :seite re 90]
+wh 4[vw :seite re 90]
 ende
 
 lerne spiralquadrate :seite
+wenn :seite>150 [ rueckkehr ]
 rquadrat :seite
 re 20
-wenn :seite>150 [rueckkehr]
 spiralquadrate (:seite+5)
 ende
 
 lerne demo
-spiralquadrate 1
+spiralquadrate 10
 ende

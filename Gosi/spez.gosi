@@ -1,0 +1,10 @@
+lerne spez :n
+wenn :n>200 [ rueckkehr ]
+wenn :n<100 [vw :n][rw :n]
+re 90
+spez :n+2
+ende
+
+lerne demo
+spez 1
+ende

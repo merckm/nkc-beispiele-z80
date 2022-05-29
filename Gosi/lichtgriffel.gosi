@@ -19,7 +19,7 @@ zeichne
 ende
 
 lerne menue
-bild blinker 0 0 dz[Quadrat :0] blinker 0 4 dz[Kreis   :0]
+bild blinker 0 0 dz [Quadrat 0] blinker 0 4 dz [Kreis 0]
 lichtgriffelxy wenn :y<60 [kreis]
 wenn :y>60 [quadrat]
 solange (:port 240)&1=0 [seite 0 0]

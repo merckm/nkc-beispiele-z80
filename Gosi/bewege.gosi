@@ -5,6 +5,6 @@ ende
 lerne bewege :speed
 vi seite 1 0 stift 1 achteck stift 0 re 90 sh vw:soeed#2 sa li 90 achteck
 seite 0 1 stift 1 li 90 sh vw ;speed sa re 90 achteck stift 0
-re 90 sh vw :soeed#2 sa li 90 achteck li 90 sh vw :speed sa re 90
+re 90 sh vw :speed#2 sa li 90 achteck li 90 sh vw :speed sa re 90
 bewege :speed
 ende

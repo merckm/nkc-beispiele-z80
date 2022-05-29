@@ -3,6 +3,6 @@ lerne quadrat :laenge
 ende
 
 lerne quadrate
- setze "i 0 wh 50 [quadrat :i setze *i :i+1]
- setze "i 50 wh 50 [ quadrat :i setze *i :i+4]
+ setze "i 0 wh 50 [quadrat :i setze "i :i+1]
+ setze "i 50 wh 50 [ quadrat :i setze "i :i+4]
 ende

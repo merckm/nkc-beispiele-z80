@@ -1,7 +1,7 @@
 lerne turm :seite
-
+wenn :seite<3 [rueckkehr]
 wh 4[vw :seite re 90]
-vprwärts :seite
+vorwaerts :seite
 turm :seite*6/10
 ende
 
