@@ -1,10 +1,11 @@
 5 DIM A(100), X(4)
-10 REM ********************************
-11 REM * GOMOKU                       *
-12 REM * ------                       *
-13 REM * Version from Tim Hartnell    *
-14 REM * Giant Book of Computer Games *
-15 REM ********************************
+10 REM *********************************
+11 REM * GOMOKU                        *
+12 REM * ------                        *
+13 REM * Version von Tim Hartnell      *
+14 REM * Giant Book of Computer Games  *
+15 REM * Angepasst an NKC Martin Merck *
+16 REM *********************************
 20 GOSUB 750
 30 GOSUB 130
 40 GOSUB 240
