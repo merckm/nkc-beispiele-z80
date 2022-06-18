@@ -1,0 +1,88 @@
+1 REM *******************************************************
+2 REM * Conways Game of Life                                *
+3 REM * http://rosettacode.org/wiki/Conway%27s_Game_of_Life *
+4 REM * Angepasst an NKC Martin Merck                       *
+5 REM *******************************************************
+10 REM 30x30 grid, padded with zeroes as the boundary
+20 DIM WO(32,  32, 2)
+30 REM RANDOMIZE TIMER - Nicht auf NKC Unterstuetzt
+40 PAGE 0,0
+50 CUR = 0 : BUF = 1
+60 CLRS
+70 PRINT:PRINT:PRINT:PRINT
+80 PRINT TAB(10);"I to perform one iteration"
+90 PRINT TAB(10);"B to load a blinker"
+100 PRINT TAB(10);"R to randomise the WO"
+110 PRINT TAB(10);"Q to quit"
+120 INPUT K$
+130 IF K$="I" OR K$="i" THEN 200
+140 IF K$="B" OR K$="b" THEN 300
+150 IF K$="R" OR K$="r" THEN 400
+160 IF K$="Q" OR K$="q" THEN 500
+170 GOTO 120
+200 CLRS:GOSUB 2000
+205 GOSUB 600
+210 GOSUB 1000
+220 GOTO 120 
+300 CLRS:GOSUB 3000
+305 GOSUB 600
+310 GOSUB 1000
+320 GOSUB 2000
+330 GOTO 310
+400 CLRS:GOSUB 4000
+405 GOSUB 600
+410 GOSUB 1000
+320 GOSUB 2000
+420 GOTO 410
+500 CLRS:END
+600 REM draw coordinates
+610 FOR XX=1 TO 31
+620 MOVETO 13*XX,7: DRAWTO 13*XX,217
+630 NEXT XX
+640 FOR YY=1 TO 31
+650 MOVETO 13,7*YY: DRAWTO 403,7*YY
+660 NEXT YY
+670 RETURN 
+1000 REM draw the WO
+1001 REM POKE HEX("87C5"),0:             REM Cursor aus
+1002 OUT 115,33
+1010 FOR XX=1 TO 30
+1060 FOR YY=1 TO 30
+1070 MOVETO 13*XX+2, 217-(7*YY)+2
+1071 M=INP(HEX("71"))
+1080 IF WO(XX, YY, CUR) = 0 THEN 1100
+1090 OUT HEX("71"),3:OUT HEX("70"),11:OUT HEX("71"),M:GOTO 1110
+1100 OUT HEX("71"),1:OUT HEX("70"),11:OUT HEX("71"),M:
+1110 NEXT YY
+1130 NEXT XX
+1140 RETURN
+2000 REM perform one iteration
+2010 FOR XX=1 TO 30
+2020 FOR YY=1 TO 30
+2030 SM=0
+2040 SM = SM + WO(XX-1, YY-1, CUR) + WO(XX, YY-1, CUR) + WO(XX+1, YY-1, CUR)
+2050 SM = SM + WO(XX-1, YY, CUR) + WO(XX+1, YY, CUR)
+2060 SM = SM + WO(XX-1, YY+1, CUR) + WO(XX, YY+1, CUR) + WO(XX+1, YY+1, CUR)
+2070 IF SM<2 OR SM>3 THEN WO(XX, YY, BUF) = 0
+2080 IF SM=3 THEN WO(XX, YY, BUF) = 1
+2090 IF SM=2 THEN WO(XX,YY,BUF) = WO(XX,YY,CUR)
+2100 NEXT YY
+2110 NEXT XX
+2120 CUR = BUF : REM exchange identities of current and buffer
+2130 BUF = 1 - BUF
+2140 RETURN
+3000 REM produces a vertical blinker at the top left corner, and blanks the rest
+3910 FOR XX=1 TO 30
+3020 FOR YY=1 TO 30
+3030 WO(XX,YY,CUR) = 0
+3040 IF XX=2 AND YY<4 THEN WO(XX, YY, CUR) = 1
+3050 NEXT YY
+3060 NEXT XX
+3070 RETURN
+4000 REM randomizes the WO with a density of 1/2
+4010 FOR XX = 1 TO 30
+4020 FOR YY = 1 TO 30
+4030 WO(XX, YY, CUR) = INT(RND(1)*2)
+4040 NEXT YY
+4050 NEXT XX
+4200 RETURN
