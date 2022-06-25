@@ -9,25 +9,25 @@
 ;* gelegt.                          *
 ;************************************
 
-IOE = 30h     ; IO-Karte Basis
+IOE = 30h     			; IO-Karte Basis
 
     .include ../Include/z80grund.asm
 
-    org 8400h       ; RAM Speicher vpn 8400 bis 87FF
+    org 8400h			; RAM Speicher vpn 8400 bis 87FF
 
 synstate:   ds 1
 merker:     ds 1
 bcd0:       ds 2
 bcd1:       ds 2
 buffer:     ds 80
-data:       ds 256+256  ; Datenspeicher fuer Kanaele
+data:       ds 256+256  	; Datenspeicher fuer Kanaele
 
 stack = $87FF
 
 PAGE = $60
 GDP  = $70
 
-    org 8800h       ; RAM Speicher vpn 8400 bis 87FF
+    org 8800h			; RAM Speicher vpn 8400 bis 87FF
     jp start
 
 ; Unterprogramme
@@ -40,15 +40,15 @@ wait1:
     pop af
     ret
 
-cmd:                ; Befehl an GDP ausgeben
+cmd:                		; Befehl an GDP ausgeben
     call wait
     out (GDP),a
     ret
 
-setpage:            ; Seite in Akku
+setpage:            		; Seite in Akku
     call wait
-    and 0F0h        ; wwrr0000
-    out (PAGE),a    ; w= write r=read
+    and 0F0h        		; wwrr0000
+    out (PAGE),a   		; w= write r=read
     ret
 
 setpen:
@@ -63,14 +63,14 @@ erapen:
     out (GDP+1),a
     ret
 
-sync:               ; warten auf vb
+sync:               		; warten auf vb
     in a,(GDP)
     and 2
     jr z,sync1
     ld a,(synstate)
     or a
-    scf             ; set carry flag
-    ret nz          ; <>0 dann carry
+    scf             		; set carry flag
+    ret nz          		; <>0 dann carry
     inc a
     ld (synstate),a
     xor a
@@ -81,54 +81,54 @@ sync1:
     scf
     ret
 
-gitter:             ; Seite = 3 Gitteraufbau
-                    ; 256 = 5V
-                    ; 10 Teile
+gitter:             		; Seite = 3 Gitteraufbau
+                    		; 256 = 5V
+                    		; 10 Teile
     call setpen
-    ld a,11111000b  ; screin,lese = 3
-    call setpage    ; wait incl.
-    ld a,00000001b  ; dotted line
+    ld a,11111000b  		; screin,lese = 3
+    call setpage    		; wait incl.
+    ld a,00000001b  		; dotted line
     out (GDP+2),a
-    ld de,0         ; Start
-    ld hl,11        ; 11 Linien (10 Unterteilungen)
+    ld de,0         		; Start
+    ld hl,11        		; 11 Linien (10 Unterteilungen)
 .L1:
-    push hl         ; Linienzaehler
+    push hl         		; Linienzaehler
     ld hl,0
-    call MOVETO     ; noveto de*25, 0
+    call MOVETO     		; noveto de*25, 0
     ld hl,510
     push de
-    call DRAWTO     ; DRAWTO de*25, 510
+    call DRAWTO     		; DRAWTO de*25, 510
     pop de
-    ld hl,25        ; inc de by 25
+    ld hl,25        		; inc de by 25
     add hl,de
     ex de,hl
     pop hl
-    dec hl          ; dec. Schleifenzaehler
+    dec hl          		; dec. Schleifenzaehler
     ld a,h
     or l
-    jp nz,.L1       ; end schleife
-                    ;
+    jp nz,.L1       		; end schleife
+                    		;
     ld hl,0
     ld de,11
 .L2:
-    push de         ; Linienzaehler
+    push de         		; Linienzaehler
     ld de,0
-    call MOVETO     ; noveto 0, hl*51
+    call MOVETO     		; MOVETO 0, hl*51
     ld de,250
     push hl
-    call DRAWTO     ; DRAWTO 250, hl*51
+    call DRAWTO     		; DRAWTO 250, hl*51
     pop hl
-    ld de,51        ; inc hl by 51
+    ld de,51        		; inc hl by 51
     add hl,de
     pop de
-    dec hl          ; dec. Schleifenzaehler
+    dec hl          		; dec. Schleifenzaehler
     ld a,d
     or e
-    jp nz,.L2       ; end schleife
-                    ;
+    jp nz,.L2       		; end schleife
+                    		;
     call wait
     ld a,0
-    out (GDP+2),a   ; reset linestype
+    out (GDP+2),a   		; reset linestype
 
     ; Mittel-Linien
     ld hl,0
@@ -145,75 +145,75 @@ gitter:             ; Seite = 3 Gitteraufbau
     call DRAWTO
     ret
 
-getframe:           ; einen Datenblock laden
-                    ; Bit 0 = Messport A + Trigger
-                    ; Bit 1 = Messport B
+getframe:           		; einen Datenblock laden
+                    		; Bit 0 = Messport A + Trigger
+                    		; Bit 1 = Messport B
 get1:
-    in a,(IOE)      ; einlesen für trigger
+    in a,(IOE)      		; einlesen für trigger
     rrca
     jr c,get1
 get2:
     in a,(IOE)
-    rrca            ; 4 T-states
-    jr nc,get2      ;   -----_____-----_____-----Trigger start
-                    ; 7 T-states condition not met
-    ld hl,data      ; 10 T-States
-    ld b,0          ; 7 T-States
-    ld c, IOE       ; 7 T-States
-    inir            ; lade 2*256 Bytes von IOE in HL
-    inir            ; 21T-Zyklen=5.25us pro Abtastpunkt bei 4MHz
+    rrca            		; 4 T-states
+    jr nc,get2     		;   -----_____-----_____-----Trigger start
+                    		; 7 T-states condition not met
+    ld hl,data      		; 10 T-States
+    ld b,0          		; 7 T-States
+    ld c, IOE       		; 7 T-States
+    inir            		; lade 2*256 Bytes von IOE in HL
+    inir            		; 21T-Zyklen=5.25us pro Abtastpunkt bei 4MHz
     ret
-                    ;
-                    ; vom Trigger bis INIR ca. 35T Zyklen = 8,75us          
+                    		;
+                    		; vom Trigger bis INIR ca. 35T Zyklen = 8,75us          
 
-put1frame:          ; Kanal 1 zeichnen
+put1frame:          		; Kanal 1 zeichnen
     call setpen
-    ld ix,data      ; datenquelle
-    ld hl,1         ; x=0 ist start
-    ld bc,509       ; 
+    ld ix,data      		; datenquelle
+    ld hl,1         		; x=0 ist start
+    ld bc,509      		; 
 .L3
-    ld de,130       ; y-Wert für 0-Pegel
-    ld a,(ix+0)     ; teste bit 0
-    and 1           ; Bit 0 ist signal
+    ld de,130       		; y-Wert für 0-Pegel
+    ld a,(ix+0)     		; teste bit 0
+    and 1           		; Bit 0 ist signal
     jp z,.L4
-    ld de,180       ; y-Wert für 1-Pegel
+    ld de,180       		; y-Wert für 1-Pegel
 .L4
     call MOVETO
-    ld a,80H        ; GDP commando set dot
+    ld a,80H        		; GDP commando set dot
     call cmd
     inc hl
     inc ix
     dec bc
     ld a,b
-    or c            ; Teste ob irgend ein bit in bc gesetzt (!=0)
-    jp nz,.L3       ; Zurück zue Schleife
+    or c            		; Teste ob irgend ein bit in bc gesetzt (!=0)
+    jp nz,.L3       		; Zurück zue Schleife
     ret
 
-put2frame:          ; Kanal 2 zeichnen
+put2frame:          		; Kanal 2 zeichnen
     call setpen
-    ld ix,data      ; datenquelle
-    ld hl,1         ; x=0 ist start
-    ld bc,509       ; 
+    ld ix,data      		; datenquelle
+    ld hl,1         		; x=0 ist start
+    ld bc,509
 .L5
-    ld de,60       ; y-Wert für 0-Pegel
-    ld a,(ix+0)     ; teste bit 0
-    and 2           ; Bit 1 ist signal
+    ld de,60       		; y-Wert für 0-Pegel
+    ld a,(ix+0)     		; teste bit 0
+    and 2           		; Bit 1 ist signal
     jp z,.L6
-    ld de,110       ; y-Wert für 1-Pegel
+    ld de,110      		; y-Wert für 1-Pegel
 .L6
     call MOVETO
-    ld a,80H        ; GDP commando set dot
+    ld a,80H        		; GDP commando set dot
     call cmd
     inc hl
     inc ix
     dec bc
     ld a,b
-    or c            ; Teste ob irgend ein bit in bc gesetzt (!=0)
-    jp nz,.L5       ; Zurück zue Schleife
+    or c            		; Teste ob irgend ein bit in bc gesetzt (!=0)
+    jp nz,.L5       		; Zurück zue Schleife
     ret
 
-clr1frame:          ; da nur 2 Linien ist
-                    ; löschen einfach
+clr1frame:          		; da nur 2 Linien ist
+                    		; löschen einfach
     call erapen
     ld hl,1
     ld de,130
@@ -230,8 +230,8 @@ clr1frame:          ; da nur 2 Linien ist
     call setpen
     ret
 
-clr2frame:          ; da nur 2 Linien ist
-                    ; löschen einfach
+clr2frame:         		; da nur 2 Linien ist
+                		; löschen einfach
     call erapen
     ld hl,1
     ld de,60
@@ -248,24 +248,24 @@ clr2frame:          ; da nur 2 Linien ist
     call setpen
     ret
 
-count:              ; ix -> bcdspeicher, um b erhoehen
-    ld a,(ix+0)     ; lsb
+count:              		; ix -> bcdspeicher, um b erhoehen
+    ld a,(ix+0)     		; lsb
     add a,b
     daa
     ld (ix+0),a
     ret nc
-    ld a,(ix+1)     ; Übertrag
+    ld a,(ix+1)     		; Übertrag
     add a,1
     daa
     ld (ix+1),a
     ret
 
-cnt525:             ; 5 1/4 Zaehler mit merker
-    push bc         ; Register retten
+cnt525:             		; 5 1/4 Zaehler mit merker
+    push bc         		; Register retten
     ld b,5
     call count
     ld a,(merker)
-    add a,1         ; 0,1,2,3 erlaubt
+    add a,1			; 0,1,2,3 erlaubt
     ld (merker),a
     cp 4
     jp nz,.L7
@@ -277,12 +277,12 @@ cnt525:             ; 5 1/4 Zaehler mit merker
     pop bc
     ret
 
-messper:            ; Messen ersten Wechsel ----____----
-					; nur Kanal 1
-					; eine Periode in us. Dezimal
-					; Kanal 1 und 2   (bit 0,1)
+messper:            		; Messen ersten Wechsel ----____----
+				; nur Kanal 1
+				; eine Periode in us. Dezimal
+				; Kanal 1 und 2   (bit 0,1)
 	xor a
-	ld (merker),a	; 1/4 Zaehler rueksetzen
+	ld (merker),a		; 1/4 Zaehler rueksetzen
 	ld hl,11		; ca. 11us sind am Anzang mit Trigger vergangen
 	ld (bcd0),hl
 	ld hl,data
@@ -333,10 +333,10 @@ messper:            ; Messen ersten Wechsel ----____----
 	ret
 
 mess0time:			; Messen ersten Wechsel ----____----
-					; eine Periode in us. Dezimal
-					; Kanal 1 und 2   (bit 0,1)
+				; eine Periode in us. Dezimal
+				; Kanal 1 und 2   (bit 0,1)
 	xor a
-	ld (merker),a	; 1/4 Zaehler rueksetzen
+	ld (merker),a		; 1/4 Zaehler rueksetzen
 	ld hl,0			; ca. 11us sind am Anzang mit Trigger vergangen
 	ld (bcd0),hl
 	ld hl,data
@@ -386,7 +386,7 @@ mess0time:			; Messen ersten Wechsel ----____----
 	ret
 
 bcdaus:				; ix -> bcdstand
-					; hl ->Zielbuffer
+				; hl ->Zielbuffer
 	ld a,(ix+1)		; MSB first
 	rrca			; erste Ziffer
 	rrca
@@ -417,11 +417,11 @@ dezaus:
 	ret
 
 ausperiode:
-	call messper	; Messwert nach bcd0
+	call messper		; Messwert nach bcd0
 	ld ix,txt2		; Text ausgabe
 	call txtprint
 	ld ix,bcd0		; Daten
-	call bcdaus 	; Ausgabe in BCD
+	call bcdaus 		; Ausgabe in BCD
 	ld hl,buffer
 	call WRITE		; Ausgabe auf den Bildschirm
 	ret
@@ -431,7 +431,7 @@ auslow:
 	ld ix,txt3
 	call txtprint
 	ld ix,bcd0		; 0-Zeitdauer
-	call bcdaus 	; Ausgabe in BCD
+	call bcdaus 		; Ausgabe in BCD
 	ld hl,buffer
 	call WRITE		; Ausgabe auf den Bildschirm
 	ret
@@ -482,16 +482,16 @@ wartesync:
 
 ab1txt:				; Text fuer beide Bildseiten Abgleich 1
 	ld ix,txt1		; Sowie Bildausgabe
-	call txtprint	; In buffer Textblock aufbauen
+	call txtprint		; In buffer Textblock aufbauen
 	ld hl,buffer
 	call WRITE		; Ausgabe mit Write
 	ld ix,txta1		; Menue-Befehle
-	call txtprint	; In buffer Textblock aufbauen
+	call txtprint		; In buffer Textblock aufbauen
 	ld hl,buffer
 	call WRITE		; Ausgabe mit Write
 	call wait
 	ld a,00000001b
-	out (GDP+2),a	; dotted line setzen in GDP CTRL Register 2
+	out (GDP+2),a		; dotted line setzen in GDP CTRL Register 2
 	ld hl,0			; Rahmen
 	ld de,120
 	call MOVETO
@@ -508,7 +508,7 @@ ab1txt:				; Text fuer beide Bildseiten Abgleich 1
 	call DRAWTO		 
 	call wait
 	ld a,0
-	out (GDP+2),a	; continuos line setzen in GDP CTRL Register 2
+	out (GDP+2),a		; continuos line setzen in GDP CTRL Register 2
 	ret
 
 txta1:
@@ -528,13 +528,13 @@ abgleich1: 			; Skop Kanal 0 darstellen
 	call clr1frame
 	call getframe
 	call put1frame
-	ld a,01000000b	; schreib = 1
+	ld a,01000000b		; schreib = 1
 	call setpage
 	call ausperiode
 	call clr1frame
 	call getframe
 	call put1frame
-	ld a,00010000b	; schreib seite 0
+	ld a,00010000b		; schreib seite 0
 	call setpage
 	call ausperiode
 	call CSTS
@@ -565,16 +565,16 @@ abgleich1: 			; Skop Kanal 0 darstellen
 
 ab2txt:
 	ld ix,txt4		; Sowie Bildausgabe
-	call txtprint	; In buffer Textblock aufbauen
+	call txtprint		; In buffer Textblock aufbauen
 	ld hl,buffer
 	call WRITE		; Ausgabe mit Write
 	ld ix,txta1		; Menue-Befehle
-	call txtprint	; In buffer Textblock aufbauen
+	call txtprint		; In buffer Textblock aufbauen
 	ld hl,buffer
 	call WRITE		; Ausgabe mit Write
 	call wait
 	ld a,00000001b
-	out (GDP+2),a	; dotted line setzen in GDP CTRL Register 2
+	out (GDP+2),a		; dotted line setzen in GDP CTRL Register 2
 	ld hl,0			; Rahmen
 	ld de,50
 	call MOVETO
@@ -597,7 +597,7 @@ ab2txt:
 	call DRAWTO
 	call wait
 	ld a,0
-	out (GDP+2),a	; continuos line setzen in GDP CTRL Register 2
+	out (GDP+2),a		; continuos line setzen in GDP CTRL Register 2
 	ret
 
 abgleich2:
@@ -614,7 +614,7 @@ abgleich2:
 	call getframe
 	call put1frame
 	call put2frame
-	ld a,01000000b	; schreib = 1
+	ld a,01000000b		; schreib = 1
 	call setpage
 	call auslow
 	call clr1frame
@@ -622,7 +622,7 @@ abgleich2:
 	call getframe
 	call put1frame
 	call put2frame
-	ld a,00010000b	; schreib seite 0
+	ld a,00010000b		; schreib seite 0
 	call setpage
 	call auslow
 	call CSTS
@@ -686,14 +686,14 @@ help:
 	ld de,255-10*2
 	push hl
 	ld hl,.L33
-	ex (sp),hl			; Return Address auf Stack
+	ex (sp),hl		; Return Address auf Stack
 .L34:
 	ld hl,0
 	ld (buffer),hl		; X=0
 	ex de,hl
 	ld (buffer+2),hl	; Y=255-20
 	ex de,hl
-	ld a,22h			; CSize = 2X 2Y
+	ld a,22h		; CSize = 2X 2Y
 	ld (buffer+4),a		; Y=255-20
 	ld a,0
 	ld (buffer+5),a		; X=0
@@ -704,7 +704,7 @@ help:
 	jp z,.L36
 	or A
 	ret Z
-	ld (hl),A			; Text kopieren
+	ld (hl),A		; Text kopieren
 	inc hl
 	inc ix
 	ld a,(ix+0)
@@ -728,7 +728,7 @@ help:
 .L37:
 	call CI
 	cp 'M'
-	jp z,.L38			; Menue
+	jp z,.L38		; Menue
 	cp 'm'
 	jp nz,.L37
 .L38:
@@ -768,46 +768,46 @@ start:
     call WRITE
     call menuein
 
-    cp '1'          ; if a='1'
+    cp '1'			; if a='1'
     jp nz,.menu2
     call abgleich1
     jp start
 .menu2:
-    cp '2'          ; if a='2'
+    cp '2'			; if a='2'
     jp nz,.menu3
     call abgleich2
     jp start
 .menu3:
-    cp '3'          ; if a='3'
+    cp '3'			; if a='3'
     jp nz,.menu4
     call help
     jp start
 .menu4:
-    cp '4'          ; if a='4'
+    cp '4'			; if a='4'
     jp nz,.L43
-                    ; fuer Erweiterungen
+        			; fuer Erweiterungen
 .L43
 .L40
     jp start
 
 
 .meld1:
-    defw 40,220     ; x,y
+    defw 40,220			; x,y
     defb 44h,0
     defb 'RDK-Digital-Scop'
     defb 0    
 .meld2:
-    defw 50,160     ; x,y
+    defw 50,160			; x,y
     defb 22h,0
     defb '1 = Periodendauer,     1-Kanal'
     defb 0    
 .meld3:
-    defw 50,130     ; x,y
+    defw 50,130			; x,y
     defb 22h,0
     defb '2 = Vergleichsmessung, 2-Kanal'
     defb 0    
 .meld4:
-    defw 50,100     ; x,y
+    defw 50,100			; x,y
     defb 22h,0
     defb '3 = Kurzerklaerung'
     defb 0    

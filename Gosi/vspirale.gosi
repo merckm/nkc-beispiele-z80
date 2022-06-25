@@ -1,17 +1,25 @@
 lerne vspirale :laenge :winkel
-wenn :laenge>200 [rueckkehr]
+wenn :laenge>300 [rueckkehr]
 vw :laenge re :winkel
 vspirale (:laenge+3) :winkel
 ende
 
 lerne demo
 vspirale 4 144
+dz [Weiter mit beliebiger Taste]
+solange ~:taste? [vi]
 ls
 vspirale 5 91
+dz [Weiter mit beliebiger Taste]
+solange ~:taste? [vi]
 ls
 vspirale 4 181
+dz [Weiter mit beliebiger Taste]
+solange ~:taste? [vi]
 ls
 vspirale 5 121
+dz [Weiter mit beliebiger Taste]
+solange ~:taste? [vi]
 ls
 vspirale 5 120
 ende
