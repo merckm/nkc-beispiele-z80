@@ -65,36 +65,6 @@ RAND:				; hl= upper-value
 	pop bc
 	ret
 
-RAND1:
-	call RANDOM
-	ld l,a
-	ld h,0
-	ld bc,170-10
-.MOD_LOOP1:
-	or a
-	sbc hl,bc
-	jp p,.MOD_LOOP1
-	add hl,bc
-	ld bc,10
-	add hl,bc
-	ld a,l
-	ret
-
-RAND2:
-	call RANDOM
-	ld l,a
-	ld h,0
-	ld bc,230-150
-.MOD_LOOP2:
-	or a
-	sbc hl,bc
-	jp p,.MOD_LOOP2
-	add hl,bc
-	ld bc,150
-	add hl,bc
-	ld a,l
-	ret
-
 SYNC:		   		; warten auf vb
 	in a,(GDP)
 	and 2

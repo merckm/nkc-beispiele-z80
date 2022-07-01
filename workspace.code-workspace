@@ -5,6 +5,9 @@
 		}
 	],
 	"settings": {
+		"editor.insertSpaces": false,
+		"editor.tabSize": 8,
+		"editor.detectIndentation": false,
 		// Controls if quick suggestions should show up while typing
 		"editor.quickSuggestions": {
 			"other": false,
