@@ -514,7 +514,7 @@ L27:	CP	79H		; Bewegung nach unten 'y'
 	LD	HL,0FFA6H	; -90 Grad
 	LD	(PHI),HL
 	LD	A,00H
-L28:	CP	73H		; Bewegung nach rects 's'
+L28:	CP	73H		; Bewegung nach rechts 's'
 	JR	NZ,L29
 	LD	A,(KOR1)
 	ADD	A,01H
@@ -522,7 +522,7 @@ L28:	CP	73H		; Bewegung nach rects 's'
 	LD	HL,0000H	; 0 Grad
 	LD	(PHI),HL
 	LD	A,00H
-L29:	CP	61H		; Bewegung nach rects 'a'
+L29:	CP	61H		; Bewegung nach links 'a'
 	JR	NZ,L30
 	LD	A,(KOR1)
 	SUB	A,01H
