@@ -2,7 +2,7 @@
 ; Graphik Beispiel für die Ansteuerung der GDP über einen Arduino
 ; https://hschuetz.selfhost.eu/forumdrc/index.php?mode=viewthread&forum_id=5&thread=44&z=1&
 ; Portiert auf den NKC in Z80 Assembler
-; Author smed
+; Original Author: smed
 ; VASM Assembler code von Dr. Martin Merck
 ;
 	.include ../Include/z80grund.asm
