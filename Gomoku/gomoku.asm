@@ -35,8 +35,8 @@ AD	=	87F4H		;Zwischenspeicher
 GOMOKU:
 RUN:
 	LD	HL,COR		;Die Speicher werden
-	LD	DE,871CH	;vorbelegt
-	LD	BC,0089H
+	LD	DE,871FH	;vorbelegt
+	LD	BC,00B9H
 	LDIR
 	LD	HL,864CH
 	LD	(KOR1),HL
@@ -69,9 +69,9 @@ SET1:
 	CALL	0280H		;
 	LD	(805DH),HL	; Turtel: tur1phi
 	XOR	A		; Clear A
-	LD	(805BH),A	; Turtel: tur1y
+	LD	(8058H),A	; Turtel: tur1y
 	LD	A,00H
-	LD	(804BH),A	; vzstor (aus sin/cos)
+	LD	(8048H),A	; vzstor (aus sin/cos)
 	RET
 FELD:
 	LD	HL,CLR		;Bewegen
@@ -274,14 +274,14 @@ L13:	CP	01H		; Einer?
 	LD	A,(ZW)
 	BIT	5,A
 	JR	Z,L11
-	SET	0,E
+	SET	4,E
 L11:	DJNZ	L14
 L10:	POP	BC
 	POP	IX
 	RET
 ;
 POS2:
-	DB	0FDH,07DH
+	DB	0FDH,07DH	; ld a,iyl
 	LD	(M2),A
 	LD	A,00H
 	LD	(M0),A
@@ -390,7 +390,7 @@ CHWS:				; bei Carry ok
 				; für ersten ZUg
 	PUSH	IY
 	CALL	POS3		; für Computer
-	DB	0FDH,07DH	; LD A,IYL Befehel nicht definiert 
+	DB	0FDH,07DH	; LD A,Y Befehel nicht definiert 
 				; aber möglich
 	POP	BC
 	CP	C
@@ -598,15 +598,18 @@ ZAEHLER:			; zählt Schritte
 	LD	HL,ZAE1
 	LD	A,(HL)
 	INC	A		; +1
-	DAA			; Dezimalzahl
+	DAA			; Dezimalzahl (BCD Korrektur)
 	LD	(HL),A
 	LD	A,30H
 	RLD
-	LD	(87ADH),A	; Zehner
+	LD	(8E49H),A	; Zehner
+;	LD	(87ADH),A	; Zehner
 	RLD
-	LD	(87AEH),A	; Einer
+	LD	(8E50H),A	; Einer
+;	LD	(87AEH),A	; Einer
 	RLD			; ok
-	LD	HL,0879EH
+;	LD	HL,0879EH
+	LD	HL,OUT1
 	CALL	WRITE		; Ausgabe Zählerstand
 	RET
 ;
@@ -700,16 +703,22 @@ L39:	LD	HL,ZAE2		; 879CH
 RUN1:
 	LD	HL,COR
 	CALL	WRITE
-	LD	HL,0004H	; 12288 Mal, Delay
+	LD	HL,3000H	; 12288 Mal, Delay
 	CALL	SCHLEIFE
 	CALL	ENDSCHLEIFE
+	CALL CI
+
 	LD	HL,9999H
 	LD	(ZAE2),HL
 	LD	A,01H
 	CALL	STATUS
 	LD	A,00H
 	CALL	STATUS
-L43:	CALL	CLPG
+	
+	LD	A,00H
+	CALL	WAIT
+	OUT	(060H),A
+L43:	CALL CLPG
 	CALL	021DH
 	LD	HL,0074H	; CSize
 	LD	(8780H),HL
@@ -718,7 +727,9 @@ L43:	CALL	CLPG
 	LD	HL,0064H	; HL= 100 (X)
 	LD	(877CH),HL
 	LD	HL,0877CH
+	LD	HL,GOMOKU2
 	CALL	WRITE		; Print Gomoku
+	CALL CI
 	LD	HL,ANW
 	CALL	WRITE		; Print Anweisung
 	LD	A,01H
@@ -733,12 +744,12 @@ L40:	LD	HL,002BH	; X=43
 	LD	HL,003AH	; Y=58
 	LD	(877EH),HL	; definiere Pos + Form
 	LD	HL,0853H	; Tilted Character, CSize = 5x3
-	LD	(877EH),HL
+	LD	(8780H),HL
 	CALL	CLPG
 	CALL	021DH
-	LD	HL,877CH
+	LD	HL,GOMOKU1  ; 877CH
 	CALL	WRITE
-	LD	HL,878BH
+	LD	HL,STAND    ; 878BH
 	CALL	WRITE		; Print Spielstand
 	LD	A,(MODE)
 	PUSH	AF
@@ -749,7 +760,8 @@ L40:	LD	HL,002BH	; X=43
 	SUB	B
 	PUSH	AF
 	CALL	STATUS
-	LD	HL,878BH
+	LD	HL,STAND
+;	LD	HL,878BH
 	CALL	WRITE
 	POP	AF
 	JR	Z,L41		; gewonnen oderverloren?
@@ -768,7 +780,7 @@ COR:				; Copyright
 	DB	33H,00H
 	DB	'(C) Frederik Siegmund',00H
 WIN:
-	DW	0190H,10H
+	DW	190H,10H
 	DB	21H,00H
 	DB	'WIN',00H
 LOSE:
@@ -782,15 +794,19 @@ ANW:
 GOMOKU1:
 	DW	2BH,3AH
 	DB	53H,08H
-	DB	'Gomoku',00			
+	DB	'GOMOKU',00H		
 STAND:
-	DW	100H,10AH
+	DW	100H,10H
 	DB	21H,00H
-	DB	'C/S:00|01',00			
+	DB	'C/S:00|01',00H			
 OUT1:
 	DW	10H,10AH
 	DB	21H,00H
-	DB	'Schritte:17',00			
+	DB	'Schritte:17',00H
+GOMOKU2:
+	DW	64H,0B4H
+	DB	74H,00H
+	DB	'Gomoku',00H		
 TAB:
 	DB	00H,01H,01H,00H,00H,11H,11H,00H,00H,10H,10H,00H
 	DB	10H,01H,01H,10H

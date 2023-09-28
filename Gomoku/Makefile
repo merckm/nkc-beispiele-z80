@@ -1,4 +1,4 @@
-ASM=vasmz80_oldstyle
+ASM=/mnt/d/Sandbox/Historical/VASM/Z80/vasmz80_oldstyle
 CASCONVERTER=../../nkc-cas-writer/caswriter.py 
 
 all: gomoku.cas
