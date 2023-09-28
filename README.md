@@ -9,6 +9,8 @@ Die Beispiele hier entstammen aus folgenden Büchern und Zeitschriften
  * Tim Hartnell - Giant Book of Computer Games(BASIC Spiele)
  * Zeitschrift Loop
 
+Leider kann ich das Programm Gomoku nicht testen und korrigieren, da es undokumentierte Z80 Op-Codes verwendet, die nicht im emulator unterstützt werden.
+
 Quick Links:
 
  * [License](#license)
